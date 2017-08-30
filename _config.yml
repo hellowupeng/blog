@@ -7,7 +7,7 @@ title: hello, wupeng
 subtitle:
 description: iOS/Android/RN
 author: wu peng
-language: chinese
+language: zh-CN
 timezone:
 
 # URL
@@ -81,3 +81,6 @@ deploy:
   type: git
   repo: https://github.com/hellowupeng/hellowupeng.github.io
   branch: master
+  
+# Disqus
+disqus_shortname: hellowupeng

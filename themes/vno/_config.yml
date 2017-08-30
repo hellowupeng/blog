@@ -3,7 +3,8 @@ menu:
   # 黄金屋: /favourite
   # 时光机: /favourite/time.html
   # 幻想间: /favourite/image.html
-  about: /aboutme
+  category: /category.html
+  about: /aboutme.html
 rss: /atom.xml
 description:
 social:
@@ -12,7 +13,7 @@ social:
   stack_overflow: 
   facebook: 
   twitter: 
-  google_plus: 
+  google_plus:
 
 page_comment: true
 logo: /images/avatar2.jpg
