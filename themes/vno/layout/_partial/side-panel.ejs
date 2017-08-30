@@ -1,4 +1,4 @@
-
+<!-- 左边窗口 -->
 <header class="panel-cover <%= !is_home()?'panel-cover--collapsed':''%>" style="background-image: url(<%- theme.background.cover %>)">
   <div class="panel-main">
     <div class="panel-main__inner panel-inverted">
@@ -19,7 +19,7 @@
             <ul class="navigation">
               <li class="navigation__item"><a href="/#blog" title="<%= __('visitblog') %>" class="blog-button"><%= __('blog') %></a></li>
             <% for (var i in theme.menu){ %>
-              <li class="navigation__item"><a href="<%- theme.menu[i] %>"><%= i %></a></li>
+              <li class="navigation__item"><a href="<%- theme.menu[i] %>"><%= __(`${i}`) %></a></li>
             <% } %>
             </ul>
           </nav>
