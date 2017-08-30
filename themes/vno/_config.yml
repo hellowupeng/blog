@@ -1,0 +1,41 @@
+menu:
+  #Archives: /archives
+  # 黄金屋: /favourite
+  # 时光机: /favourite/time.html
+  # 幻想间: /favourite/image.html
+  About: /aboutme
+rss: /atom.xml
+description:
+social:
+  weibo: 
+  github: https://github.com/hellowupeng
+  stack_overflow: 
+  facebook: 
+  twitter: 
+  google_plus: 
+
+page_comment: true
+logo: /images/avatar2.jpg
+background:
+  cover: /images/background-cover1.jpg
+  color: cover-purple
+
+archive_date_format: MMM DD
+fancybox: true
+
+duoshuo_shortname: 
+
+google_analytics: 
+baidu_tongji:
+favicon: /images/avatar2.jpg
+
+#mathjax
+mathjax: true
+
+# 'Read more' button
+excerpt_link: 继续阅读
+
+# Footer message
+site_license: <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</a>
+thanks_message: thanks to <a href="https://pages.github.com/">GitHub Pages</a> for free hosting.
+
