@@ -3,7 +3,7 @@ menu:
   # 黄金屋: /favourite
   # 时光机: /favourite/time.html
   # 幻想间: /favourite/image.html
-  About: /aboutme
+  关于: /aboutme
 rss: /atom.xml
 description:
 social:
