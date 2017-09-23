@@ -1,7 +1,10 @@
-
-
-# 基础（The Basics）
-
+---
+title: The Basics
+date: {{ date }}
+categories: Swift
+tags: iOS
+comment: true
+---
 Swift 是一种用于iOS，macOS，watchOS 和 tvOS 应用开发的新语言。尽管如此，Swift 的许多部分会和你使用 C 和 Objective-C 的开发体验面熟。
 
 Swift 为所有基础的 C 和 Objective-C 类型提供了自己的版本，包括对于整型的 `Int`，对于浮点值的 `Double` 和 `Float`，对于布尔值的 `Bool` 和 对于文本数据的 `String`。Swift 也提供了三种主要集合类型，`Array` 、 `Set` 和 `Dictionary`，在集合类型（Collection Types）里有描述。
