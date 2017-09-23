@@ -84,14 +84,62 @@ UIKit 管理你的应用和系统的交互并为你提供类来管理你的应�
 
 ### 图形，绘制和输出（Graphics，Drawing，and Printing）
 
+UIKit 提供类和协议帮助你配置你的绘制环境和渲染内容。
+
+##### [图片和 PDF（Images and PDF）]()
+
+创建并管理图片，包括哪些使用位图（bitmap）和 PDF 格式的图片。
+
+##### [绘制（Drawing）]()
+
+使用渲染器，绘制路径，线，阴影来配置你的应用的绘制环境。
+
+##### [打印（Printing）]()
+
+显示系统打印面板和管理过程。
+
 ### 文本（Text）
+
+除了在你的应用里易于显示文本的文本视图（text views）外，UIKit 提供了支持系统键盘的自定义文本管理和渲染。
+
+##### [文本显示和字体（Text Display and Fonts）]()
+
+使用 UIKit 视图显示文本，管理字体和检查拼写。
+
+##### [文本存储（Text Storage）]()
+
+管理文本存储和协调文本的布局。
+
+##### [键盘和输入（Keyboards and Input）]()
+
+配置系统键盘或创建你自己的键盘并自己处理输入。
 
 ### 弃用（Deprecated）
 
-### 结构（Structures）
+避免在你的应用里使用弃用的类和协议。
+
+##### [弃用的符号（Deprecated Symbols）]()
+
+### 结构体（Structures）
+
+`struct`  [UIDocumentBrowserError]()
+
+一个包含关于文档浏览错误信息的结构体。
 
 ### 类（Classes）
 
+`class`  [UICollectionViewDropPlaceholder]()
+
+`class` [UICollectionViewPlaceholder]()
+
+`class` [UITableViewDropPlaceholder]()
+
+`class` [UITableViewPlaceholder]()
+
 ### 协议（Protocols）
 
+`protocol` [UIItemProviderPresentationSizeProviding]()
+
 ### 参考（Reference）
+
+##### [UIKit Enumerations]()
