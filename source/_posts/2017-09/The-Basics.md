@@ -2,7 +2,7 @@
 title: The Basics（基础）
 date: {{ date }}
 categories: Swift
-tags: iOS
+tags: swift programming guide
 comment: true
 ---
 [原文地址](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/TheBasics.html#//apple_ref/doc/uid/TP40014097-CH5-ID309)

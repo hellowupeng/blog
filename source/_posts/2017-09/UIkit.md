@@ -2,7 +2,7 @@
 title: UIKit
 date: {{ date }}
 categories: Apple文档
-tags: iOS
+tags: apple docs
 comment: true
 ---
 [原文地址](https://developer.apple.com/documentation/uikit)

@@ -1,4 +1,11 @@
-# 数值和基本值（Numbers and Basic Values）
+---
+title: Numbers and Basic Values（数值和基本值）
+date: {{ date }}
+categories: Apple文档
+tags: swift standard library
+comment: true
+---
+[原文地址](https://developer.apple.com/documentation/swift/numbers_and_basic_values)
 
 用数值，布尔值和其他基础类型模型化数据。
 

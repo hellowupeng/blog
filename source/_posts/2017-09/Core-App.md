@@ -2,7 +2,7 @@
 title: Core App（核心应用）
 date: {{ date }}
 categories: Apple文档
-tags: iOS
+tags: UIKit
 comment: true
 ---
 [原文地址](https://developer.apple.com/documentation/uikit/core_app)
