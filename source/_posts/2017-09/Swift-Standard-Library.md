@@ -28,7 +28,7 @@ Swift 标准库为写 Swift 程序定义了内层功能，包括：
 
 ### 值和集合（Values and Collections）
 
-##### [数值和基础值（Numbers and Basic Values）](https://developer.apple.com/documentation/swift/numbers_and_basic_values)
+##### [数值和基础值（Numbers and Basic Values）](/2017/09/24/2017-09/Numbers-and-Basic-Values）/)
 
 用数值，布尔值和其他基础类型模型数据。
 
