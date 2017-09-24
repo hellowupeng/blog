@@ -1,4 +1,11 @@
-# Core App
+---
+title: Core App
+date: {{ date }}
+categories: Apple文档
+tags: iOS
+comment: true
+---
+[原文地址](https://developer.apple.com/documentation/uikit/core_app)
 
 管理你的应用的数据模型和它与系统的交互。
 
