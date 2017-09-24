@@ -1,5 +1,5 @@
 ---
-title: Core App
+title: Core App（核心应用）
 date: {{ date }}
 categories: Apple文档
 tags: iOS

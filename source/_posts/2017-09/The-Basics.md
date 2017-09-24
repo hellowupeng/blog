@@ -1,5 +1,5 @@
 ---
-title: The Basics
+title: The Basics（基础）
 date: {{ date }}
 categories: Swift
 tags: iOS
