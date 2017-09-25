@@ -82,7 +82,48 @@ var red, green, blue: Double
 
 ### 命名常量和变量（Naming Constants and Variables）
 
+常量和变量名能包含几乎任何字符，包括 Unicode 字符：
+
+```swift
+let π = 3.14159
+let 你好 = "你好世界"
+let 🐶🐮 = "dogcow"
+```
+
+常量和变量名不能包含空格字符，数学符号，箭头，私有（或无效）Unicode 代码点，或线条和边框字符。它们也不能以数字开头，尽管数字能被包含在名字和其他地方。
+
+一旦你已经声明了一个确定类型的常量或者变量，你不能用同样的名字再次声明它，或者把它变为不同类型的存储值。你也不能把常量改为变量或把变量改为常量。
+
+> ###### 注意
+>
+> 如果你需要给一个常量或变量和 Swift 保留关键字相同的名字，当作为一个名字使用时，用反引号包裹关键字。不管怎样，避免使用关键字作为变量名，除非你完全没有其他选择。
+
+你可以改变一个已经存在的变量的值到一个兼容类型的值。在这个例子里，`friendlyWelcome` 的值被从 `"Hello!"` 改变为 `"Bonjour!"`：
+
+```swift
+var friendlyWelcome = "Hello!"
+friendlyWelcome = "Bonjour!"
+// friendlyWelcome is now "Bonjour!"
+```
+
+不像变量一样，常量的值在它设置后不能代表。尝试这样做的话，当你的代码被编译时会作为一个错误报告出来。
+
+```swift
+let languageName = "Swift"
+languageName = "Swift++"
+// This is a compile-time error: languageName cannot be changed.
+```
+
 ### 打印常量和变量（Printing Constants and Variables）
+
+你可以用 `print(_:separator:terminator:)` 函数打印当前常量或变量的值。
+
+```swift
+print(friendlyWelcome)
+// Prints "Bonjour!"
+```
+
+`print(_:separator:terminator:)` 函数是一个打印一个或多个值到多个合适的输出的全局函数。在 Xcode 里，例如，`print(_:separator:terminator:)` 函数在 Xcode 的”控制台“面板打印它的输出。`separator` 和 `terminator` 参数有默认值，所以当你调用这个函数时，你可以忽略它们。默认情况下，这个函数通过添加一个换行符来终止它打印的这行。要打印一个在它后面没有换行符的值，传入一个空的字符串作为终止符，例如，`print(someValue, terminator: "")`。对于关于带有默认值参数的信息，查看默认参数值（Default Parameter Values）。
 
 ## 注释（Comments）
 
