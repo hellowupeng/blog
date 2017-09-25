@@ -47,6 +47,87 @@ while i != 0 {
 
 C bool 和 Boolean 类型和 Objective-C BOOL 类型都被桥接到 Swift 里作为 Bool。在 Swift 里单一的 Bool 类型保证了从 C 和 Objective-C 里导入的函数（functions），方法（methods）和属性（properties）有一个一致的类型接口。
 
-## 话题（Topics）
+## 主题（Topics）
+
+### 比较布尔值（Comparing Boolean Values）
+
+`static func ==(Bool)`
+
+`static func !=(Bool, Bool)`
+
+返回表示两个值是否不相等的布尔值。‘
+
+### 转换一个布尔值（Transforming a Boolean）
+
+`static func !(Bool)`
+
+在一个布尔值上执行逻辑非操作。
+
+`static func ||(Bool, () -> Bool)`
+
+在两个布尔值上执行逻辑或操作。
+
+`static func &&(Bool, () -> Bool)`
+
+在两个布尔值上执行逻辑与操作。
+
+### 描述一个布尔值（Describing a Boolean）
+
+`var` [description](https://developer.apple.com/documentation/swift/bool/1538894-description)`: String`
+
+布尔值的文本表示。
+
+### 检查布尔值（Inspecting a Boolean）
+
+`var` [customMirror](https://developer.apple.com/documentation/swift/bool/1641275-custommirror)`: Mirror`
+
+反射布尔值的一个镜像。
+
+`var` [customPlaygroundQuickLook](https://developer.apple.com/documentation/swift/bool/1641275-custommirror)`: PlaygroundQuickLook`
+
+`var` [hashValue](https://developer.apple.com/documentation/swift/bool/1540169-hashvalue)`: Int`
+
+布尔值哈希值。
+
+### 从另一个值创建布尔值（Creating a Boolean From Another Value）
+
+[init](https://developer.apple.com/documentation/swift/bool/1540923-init)`(Bool)`
+
+创建一个等于给定布尔值的实例。
+
+[init](https://developer.apple.com/documentation/swift/bool/2428231-init)`?(String)`
+
+从给定字符串创建一个新的布尔值。
+
+[init(truncating: `NSNumber`)](https://developer.apple.com/documentation/swift/bool/2895323-init)
+
+[init?(exactly: `NSNumber`)](https://developer.apple.com/documentation/swift/bool/2895341-init)
+
+### 编码和解码（Encoding and Decodiing）
+
+[init(from: `Decoder`)](https://developer.apple.com/documentation/swift/bool/2894515-init)
+
+[`func` encode(to: `Encoder`)](https://developer.apple.com/documentation/swift/bool/2894902-encode)
+
+### 极少使用的初始化器（Infrequently Used Initializers）
+
+[init()](https://developer.apple.com/documentation/swift/bool/1539399-init)
+
+创建一个初始化为假的实例。
+
+[init(booleanLiteral: `Bool`)](https://developer.apple.com/documentation/swift/bool/1540965-init)
+
+创建一个初始化为指定布尔值字面量的实例。
 
 ## 关系（Relationships）
+
+### 遵循（协议）（Conforms To）
+
+- [CustomPlaygroundQuickLookable](https://developer.apple.com/documentation/swift/customplaygroundquicklookable)
+- [CustomReflectable](https://developer.apple.com/documentation/swift/customreflectable)
+- [CustomStringConvertible](https://developer.apple.com/documentation/swift/customstringconvertible)
+- [Equatable](https://developer.apple.com/documentation/swift/equatable)
+- [ExpressibleByBooleanLiteral](https://developer.apple.com/documentation/swift/expressiblebybooleanliteral)
+- [Hashable](https://developer.apple.com/documentation/swift/hashable)
+- [LosslessStringConvertible](https://developer.apple.com/documentation/swift/losslessstringconvertible)
+
