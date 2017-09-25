@@ -13,7 +13,7 @@ comment: true
 
 ### 逻辑值（Logical Values）
 
-`struct` [Bool](https://developer.apple.com/documentation/swift/bool)
+`struct` [Bool](/2017/09/25/2017-09/Bool/)
 
 实例是真（true）或假（false）的值类型。
 
