@@ -1,5 +1,10 @@
-# Bool（布尔型）
-
+---
+title: Bool（布尔型）
+date: {{ date }}
+categories: Apple文档
+tags: Numbers and Basic Values
+comment: true
+---
 ###### Structure
 
 实例是真或假的值类型。
@@ -73,29 +78,29 @@ C bool 和 Boolean 类型和 Objective-C BOOL 类型都被桥接到 Swift 里作
 
 ### 描述一个布尔值（Describing a Boolean）
 
-`var` [description](https://developer.apple.com/documentation/swift/bool/1538894-description)`: String`
+[`var` description`: String`](https://developer.apple.com/documentation/swift/bool/1538894-description)
 
 布尔值的文本表示。
 
 ### 检查布尔值（Inspecting a Boolean）
 
-`var` [customMirror](https://developer.apple.com/documentation/swift/bool/1641275-custommirror)`: Mirror`
+[`var` customMirror`: Mirror`](https://developer.apple.com/documentation/swift/bool/1641275-custommirror)
 
 反射布尔值的一个镜像。
 
-`var` [customPlaygroundQuickLook](https://developer.apple.com/documentation/swift/bool/1641275-custommirror)`: PlaygroundQuickLook`
+[`var` customPlaygroundQuickLook`: PlaygroundQuickLook`](https://developer.apple.com/documentation/swift/bool/1641275-custommirror)
 
-`var` [hashValue](https://developer.apple.com/documentation/swift/bool/1540169-hashvalue)`: Int`
+[`var` hashValue`: Int`](https://developer.apple.com/documentation/swift/bool/1540169-hashvalue)
 
 布尔值哈希值。
 
 ### 从另一个值创建布尔值（Creating a Boolean From Another Value）
 
-[init](https://developer.apple.com/documentation/swift/bool/1540923-init)`(Bool)`
+[init`(Bool)`](https://developer.apple.com/documentation/swift/bool/1540923-init)
 
 创建一个等于给定布尔值的实例。
 
-[init](https://developer.apple.com/documentation/swift/bool/2428231-init)`?(String)`
+[init`?(String)`](https://developer.apple.com/documentation/swift/bool/2428231-init)
 
 从给定字符串创建一个新的布尔值。
 
