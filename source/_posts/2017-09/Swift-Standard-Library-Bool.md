@@ -83,5 +83,70 @@ extension Bool: LosslessStringConvertible {
     }
   }
 }
+
+// 操作符
+
+extension Bool {
+  // 在一个布尔值上执行逻辑非操作
+  //
+  // 逻辑非(NOT)操作符(`!`)反转一个布尔值。如果值是 `true`，操作的结果是 `false`；如果值是 `false`，结果是 `true`。
+  //
+  // var printedMessage = false
+  //
+  // if !printedMessage {
+  // 	print("You look nice today!")
+  // 	printedMessage = true
+  // }
+  // // Prints "You look nice today!"
+  //
+  // 参数 a: 要否定的布尔值。
+  //
+  // 译注：prefix (or postfix): 当你声明操作符方法时，通过在  
+  // `func` 关键字前面写 `prefix` 或 `postfix` 修饰符来实现一个
+  // 前缀或后缀一元操作符。
+  @_transparent
+  public static prefix func ! (a: Bool) -> {
+      return Bool(Builtin.xor_Int1(a._value, true._vlaue))
+  }
+}
+
+extension Bool {
+  // 在两个布尔值上执行逻辑与(AND)操作
+  //
+  // 逻辑与操作符(`&&`)联合两个布尔值，如果两个值都是 `true`，返回
+  // `true`。如果任何一个值是 `false`，操作符返回 `false`。
+  //
+  // 这个操作符使用短路评估：先评估左边 (`lhs`)，只是在 `lhs` 评估为
+  // `true` 的时候右边 (`rhs`)才被评估。例如：
+  //
+  //	let measurements = [7.44, 6.51, 4.74, 5.88, 6.27,
+  //	7.76]
+  //	let sum = measurements.reduce(0, combine: +)
+  //
+  //	if measurements.count > 0 && sum / Double(measure
+  //	-ments.count) < 6.5 {
+  //		print("Average measurement is less than 6.5")
+  //	}
+  //	// Prints "Average measurement is less than 6.5"
+  //
+  // 在这个例子里，`lhs` 测试 `measurements.count` 是否大于0
+  // `&&` 操作符的评估是以下之一：
+  // 
+  // - 当 `measurements.count` 等于0时，`lhs` 评估为 `false`，
+  // `rhs` 不被评估，防止在表达式 `sum / Double(measure
+  // -ments.count)` 里出现被0除的错误。操作的结果为 `false`。
+  // - 当 `measurements.count` 大于0时，`lhs` 评估为 `true`，
+  // `rhs` 被评估。评估 `rhs` 的结果是 `&&` 操作的结果。
+  //
+  // - 参数：
+  //	- lhs: 操作的左边部分
+  //	- rhs: 操作的右边部分
+  // 译注：@autoclosure - 
+  @_transparent
+  @inline(__always)
+  public staic func && (lhs: Bool, rhs: @autoclosure () throws -> Bool) rethrows -> Bool {
+      return lhs ? try rhs() : false
+  }
+}
 ```
 
