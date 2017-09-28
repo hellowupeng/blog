@@ -141,11 +141,53 @@ extension Bool {
   // - 参数：
   //	- lhs: 操作的左边部分
   //	- rhs: 操作的右边部分
-  // 译注：@autoclosure - 
+  // 译注：@autoclosure - 在表达式周围自动创建一个闭包
   @_transparent
   @inline(__always)
   public staic func && (lhs: Bool, rhs: @autoclosure () throws -> Bool) rethrows -> Bool {
       return lhs ? try rhs() : false
+  }
+  
+  // 在两个布尔值上执行逻辑或操作。
+  //
+  // 逻辑或操作符 `||` 联合两个布尔值，如果其中一个值是 `true`，返回 
+  // `true`。如果两个值都是 `false`，操作符返回 `false`。
+  //
+  // 这个操作符使用短路评估：左手边 (`lhs`) 先被评估，右手边
+  // (`rhs`) 只有在 `lhs` 评估为 `false` 时才会被评估。例如：
+  //
+  //	let majorErrors: Set = ["No first name", "
+  //	name", ...]
+  //	let error = ""
+  //
+  //	if error.isEmpty || !majorErrors.contains(error) {
+  //		print("No major errors detected")
+  //	} else {
+  // 		print("Major error: \(error)")
+  //	}
+  //	// Prints "No major errors detected"
+  // 在这个例子里，`lhs` 测试 `error` 是否是一个空字符串。
+  // `||` 操作符的评估是以下之一：
+  //
+  // - 当 `error` 是一个空字符串时，`lhs` 评估为 `true`，`rhs` 不
+  // 评估，跳过调用 `majorErrors.contains(_:)`。操作的结果是
+  // `true`。
+  //
+  // - 当 `error` 不是空字符串时，`lhs` 评估为 `false`，`rhs` 被
+  // 评估。评估 `rhs` 的结果是 `||` 操作的结果。
+  //
+  // - 参数：
+  //	- lhs: 操作的左边部分。
+  //	- rhs: 操作的右边部分。
+  //
+  // 注：
+  // @_transparent: 编译器内部的
+  // @inline(_always): 声明函数总是编译成 inline 的形式。
+  // @inline(never): 声明函数从不编译成 inline 的形式。
+  @_transparent
+  @inline(_always)
+  public static func || (lhs: Bool, rhs: @autoclosure () throws -> Bool) rethrows -> Bool {
+      return lhs ? true : try rhs()
   }
 }
 ```
