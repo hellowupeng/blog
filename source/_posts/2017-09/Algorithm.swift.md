@@ -109,5 +109,38 @@ public struct EnumeratedIterator<Base: IteratorProtocol>: IteratorProtocol, Sequ
     return result
   }
 }
+
+// 一个序列或集合元素的枚举。
+//
+// `EnumeratedSequence` 是一个序列对 (*n*, *x*), *n*s 是从0开始的连续的 `Int` 值，*x*s是基类序列
+// 元素。
+//
+// 要创建一个 `EnumeratedSequence` 的实例，在一个序列或集合上调用 `enumerated()`。以下示例
+// 列举出一个数组的元素。
+//
+//	var s = ["foo", "bar"].enumerated()
+//	for (n, x) in s {
+//		print("\(n): \(x)")
+//	}
+//	// Prints "0: foo"
+//	// Prints "1: bar"
+@_fixed_layout
+public struct EnumeratedSequence<Base: Sequence>: Sequence {
+  @_versioned
+  interval var _base: Base
+  
+  // 来自于 `Base` 序列的构造
+  @_inlineable
+  @_versioned
+  interval init(_base: Base) {
+    self._base = _base
+  }
+  
+  // 返回一个越过这个序列的元素的迭代器。
+  @_inlineable
+  public func makeIterator() -> EnumeratedIterator<Base.Iterator> {
+      return EnumeratedIterator(_base: _base.makeIterator())
+  }
+}
 ```
 
