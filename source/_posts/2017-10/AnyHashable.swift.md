@@ -70,6 +70,37 @@ internal struct _ConcreteHashableBox<Base: Hashable>: _AnyHashableBox {
     }
     return nil
   }
+  
+  @_inlineable // FIXME(sil-serialize-all)
+  @_versioned // FIXME(sil-serialize-all)
+  internal var _hashValue: Int {
+    return _baseHashable.hashValue
+  }
+  
+  @_inlineable // FIXME(sil-serialize-all)
+  @_versioned // FIXME(sil-serialize-all)
+  internal var _base: Any {
+    return _baseHashable
+  }
+  
+  @_inlineable // FIXME(sil-serialize-all)
+  @_versioned // FIXME(sil-serialize-all)
+  internal
+  func _downCastConditional<T>(into result: UnsafeMutablePointer<T>) ->Bool {
+    guard let value = _baseHashable as? T else { return false }
+    result.initialize(to: value)
+    return true
+  }
 }
+
+#if _runtime(_ObjC)
+// 在被桥接到 Objective-C 后，取回自定义任何可哈希的值的表示
+@_inlineable // FIXME(sil-serialize-all)
+@_versioned // FIXME(sil-serialize-all)
+internal func _getBridgedCustomAnyHashable<T>(_ value: T) -> AnyHashable? {
+  let bridgedValue = _bridgeAnythingToObjectiveC(value)
+  return (bridgedValue as? _HasCustomAnyHashableRepresentation)?._toCustomAnyHashable()
+}
+#endif
 ```
 
