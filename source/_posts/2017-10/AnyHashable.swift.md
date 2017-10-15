@@ -101,7 +101,8 @@ internal struct _ConcreteHashableBox<Base: Hashable>: _AnyHashableBox {
 }
 
 #if _runtime(_ObjC)
-// 在被桥接到 Objective-C 后，取回自定义任何可哈希的值的表示
+// 在被桥接到 Objective-C 后，取回自定义任何可哈希的值的表示。这映射到 Objective-C 并反转一个非自定义
+// 的表示到一个自定义的，被用来作为用于比较的最小公分母。
 @_inlineable // FIXME(sil-serialize-all)
 @_versioned // FIXME(sil-serialize-all)
 internal func _getBridgedCustomAnyHashable<T>(_ value: T) -> AnyHashable? {
@@ -109,4 +110,93 @@ internal func _getBridgedCustomAnyHashable<T>(_ value: T) -> AnyHashable? {
   return (bridgedValue as? _HasCustomAnyHashableRepresentation)?._toCustomAnyHashable()
 }
 #endif
+
+// 一个可擦除类型的可哈希的值。
+//
+// `AnyHashable` 类型提前相等性比较和哈希操作到一个潜在的可哈希的值，隐藏它的特定潜在的类型。
+//
+// 
+@_fixed_layout //FIXME(sil-serialize-all)
+public struct AnyHashable {
+  @_versioned // FIXME(sil-serialize-all)
+  internal var _box: _AnyHashableBox
+  @_versioned // FIXME(sil-serialize-all)
+  internal var _usedCustomRepresentation: Bool
+  
+  // 创建一个包裹给定实例的擦除类型可哈希的值。
+  //
+  // 以下示例创建两种擦除类型可哈希的值：`x` 用值42包裹一个 `Int`，而 `y` 用相同的数值包裹一个 `UInt8`
+  // 。因为 `x` 和 `y` 的潜在类型不同，这两个变量不作为相等来比较尽管有相同的潜在的值。
+  //
+  //	let x = AnyHashable(Int(42))
+  //	let y = AnyHashable(UInt8(42))
+  //
+  //	print(x == y)
+  //	// 打印 "false" 因为 `Int` 和 `UInt8` 是不同类型。
+  //
+  //	print(x == AnyHashable(Int(42)))
+  //	// Prints "true"
+  //
+  // - 参数 base: 一个要包裹的可哈希的值。
+  @_inlineable // FIXME(sil-serialize-all)
+  public init<H: Hashable>(_ base: H) {
+    if let customRepresentation = (base as? _HasCustomAnyHashableRepresentation)?
+    	._toCustomAnyHashable() {
+		self = customRepresentation
+		self._usedCustomRepresentation = true
+		return
+	}
+	
+	self._box = _ConcreteHashableBox(0 as Int)
+	self._usedCustomRepresentation = false
+	_stdlib_makeAnyHashableUpcastingToHashableBaseType(base, storingResultInto: &self)
+  }
+  
+  @_inlineable // FIXME(sil-serialize-all)
+  @_versioned // FIXME(sil-serialize-all)
+    internal init<H: Hashable>(_usingDefaultRepresentationOf base: H) {
+    self._box = _concreteHashableBox(base)
+    self._usedCustomRepresentation = false
+  }
+  
+  // 被实例包裹的值。
+  //
+  // `base`属性能用转换操作符(`as`?, `as!`, 或 `as`)中的一个回溯到它的原始类型。
+  //
+  //	let anyMessage = AnyHashable("Hello wrold!")
+  //	if let unwrappedMessage = anyMessage.base as? String {
+  //		print(unwrappedMessage)
+  //	}
+  //	// 打印 "Hello world!"
+  @_inlineable // FIXME(sil-serialize-all)
+  public var base: Any {
+    return _box._base
+  }
+  
+  @_inlineable // FIXME(sil-serialize-all)
+  @_versioned // FIXME(sil-serialize-all)
+  internal func _downCastConditional<T>(into result: UnsafeMutablePointer<T>) -> Bool {
+    // 尝试向下转换。
+    if _box._downCastConditional(into: result) { return true }
+    
+    #if _runtime(_ObjC)
+    // 如果我们使用自定义表示，桥接到 Objective-C 然后尝试从那里转换。
+    if _usedCustomRepresentation {
+      if let value = _bridgeAnythingToObjectiveC(_box._base) as? T {
+        result.initialize(to: value)
+        return true
+      }
+    }
+    #endif
+    
+    return false
+  }
+}
+
+extension AnyHashable: Equatable {
+  @_inlinable // FIXME(sil-serialize-all)
+  public static func == (lhs: AnyHashable, rhs: AnyHashable) -> Bool {
+    
+  }
+}
 ```
