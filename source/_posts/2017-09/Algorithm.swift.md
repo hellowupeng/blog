@@ -1,5 +1,10 @@
-# Algorithm.swift
-
+---
+title: Algorithm.swift
+date: {{ date }}
+categories: Swift Standard Library
+tags: Swift Standard Library
+comment: true
+---
 ```swift
 // 返回两个可比较的值得较小的
 //
@@ -143,4 +148,3 @@ public struct EnumeratedSequence<Base: Sequence>: Sequence {
   }
 }
 ```
-

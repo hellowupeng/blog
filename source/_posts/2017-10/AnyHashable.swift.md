@@ -1,3 +1,10 @@
+---
+title: AnyHashable.swift
+date: {{ date }}
+categories: Swift Standard Library
+tags: Swift Standard Library
+comment: true
+---
 ```swift
 // 用 `AnyHashable` 有一个自定义表示的值。
 //
@@ -103,4 +110,3 @@ internal func _getBridgedCustomAnyHashable<T>(_ value: T) -> AnyHashable? {
 }
 #endif
 ```
-

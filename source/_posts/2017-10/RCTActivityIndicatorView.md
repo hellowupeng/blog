@@ -1,3 +1,10 @@
+---
+title: RCTActivityIndicatorView
+date: {{ date }}
+categories: React Native
+tags: React Native
+comment: true
+---
 ```objective-c
 // RCTActivityIndicatorView.h
 #import <UIKit/UIKit.h>
@@ -22,4 +29,3 @@
 
 @end
 ```
-
