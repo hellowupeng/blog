@@ -11,7 +11,8 @@ comment: true
 
 @interface RCTActivityIndicatorView: UIActivityIndicatorView
 @end
-  
+```
+```objective-c
 // RCTActivityIndicatorView.m
 #import "RCTActivityIndicatorView.h"
 
@@ -29,3 +30,43 @@ comment: true
 
 @end
 ```
+
+```objective-c
+// RCTActivityIndicatorViewManager.h
+#import <React/RCTViewManager.h>
+
+@interface RCTConvert (UIActivityIndicatorView)
+  
++ (UIActivityIndicatorViewStyle)UIActivityIndicatorViewStyle:(id)json;
+  
+@end
+  
+@interface RCTActivityIndicatorViewManager: RCTViewManager
+  
+@end
+```
+
+```objective-c
+// RCTActivityIndicatorViewManager.m
+#import "RCTActivityIndicatorViewManager.h"
+
+#import "RCTActivityIndicatorView.h"
+#import "RCTConvert.h"
+
+@implementation RCTConvert (UIActivityIndicatorView)
+
+// 注意：支持 UIActivityIndicatorViewStyleGray 是没有意义的，因为我们可以设置颜色为我们想要的
+// 任意值。
+
+RCT_ENUM_CONVERTER(UIActivityIndicatorViewStyle, (@{
+  @"large": @(UIActivityIndicatorViewStyleWhiteLarge),
+  @"small": @(UIActivityIndicatorViewStyleWhite),
+}), UIActivityIndicatorViewStyleWhiteLarge, integerValue)
+
+@end
+  
+@implementation RCTActivityIndicatorViewManager
+  
+@end
+```
+
