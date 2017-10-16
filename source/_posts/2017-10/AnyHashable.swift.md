@@ -115,7 +115,18 @@ internal func _getBridgedCustomAnyHashable<T>(_ value: T) -> AnyHashable? {
 //
 // `AnyHashable` 类型提前相等性比较和哈希操作到一个潜在的可哈希的值，隐藏它的特定潜在的类型。
 //
-// 
+// 你可以在字典和其他要求通过在 `AnyHashable` 实例里包裹混合类型键来遵循 `Hashable` 的集合里存储
+// 混合类型键。
+//
+//	let descriptions: [AnyHashable: Any] = [
+//		AnyHashable("😀"): "emoji",
+//		AnyHashable(42): "an Int",
+//		AnyHashable(Int(43)): "an Int8",
+//		AnyHashable(Set(["a", "b"])): "a set of strings"
+//	]
+//	print(descriptions[AnyHashable(42)]!)	// 输出 "an Int"
+//	print(descriptions[AnyHashable(43)])	// 输出 "nil"
+//	print(descriptions[AnyHashable(Int8(43))]!) // 输出 "a set of strings"
 @_fixed_layout //FIXME(sil-serialize-all)
 public struct AnyHashable {
   @_versioned // FIXME(sil-serialize-all)
@@ -196,7 +207,53 @@ public struct AnyHashable {
 extension AnyHashable: Equatable {
   @_inlinable // FIXME(sil-serialize-all)
   public static func == (lhs: AnyHashable, rhs: AnyHashable) -> Bool {
+  	// 如果他们相等，就结束了。
+    if let result = lhs._box._isEqual(to: rhs._box) { return result }
     
+    #if _runtime(_ObjC)
+    
+    if lhs._usedCustomRepresentation != rhs._usedCustomRepresentation {
+      if lhs._usedCustomRepresentation {
+        if let customRHS = _getBridgedCustomAnyHashable(rhs._box._base) {
+          return lhs._box._isEqual(to: customRHS._box) ?? false
+        }
+        return false
+      }
+      
+      if let customLHS = _getBridgedCustomAnyHashable(lhs._box._base) {
+        return customLHS._box._isEqual(to: rhs._box) ?? false
+      }
+      return false
+    }
+    #endif
+    
+    return false
   }
 }
+
+extension AnyHashable: Hashable {
+  @_inlineable // FIXME(sil-serialize-all)
+  public var description: String {
+    return String(describing: base)
+  }
+}
+
+extension AnyHashable: CustomDebugStringConvertible {
+  @_inlineable // FIXME(sil-serialize-all)
+  public var debugDescription: String {
+    return "AnyHashable(" + String(reflecting: base) + ")"
+  }
+}
+
+extension AnyHashable: CustomReflectable {
+  @_inlineable // FIXME(sil-serialize-all)
+  public var customMirror: Mirror {
+    return Mirror(self, children: ["value": base])
+  }
+}
+
+@_inlineable // FIXME(sil-serialize-all)
+@_silgen_name("_swift_stdlib_makeAnyHashableUsingDefaultRepresentation")
+public // COMPILER_INTRINSIC (actually, called from the runtime)
+func 
 ```
