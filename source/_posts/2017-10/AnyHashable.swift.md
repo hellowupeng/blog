@@ -255,5 +255,27 @@ extension AnyHashable: CustomReflectable {
 @_inlineable // FIXME(sil-serialize-all)
 @_silgen_name("_swift_stdlib_makeAnyHashableUsingDefaultRepresentation")
 public // COMPILER_INTRINSIC (actually, called from the runtime)
-func 
+func _stdlib_makeAnyHashableUsingDefaultRepresentation<H: Hashable>(
+	of value: H,
+	storingResultInto result: UnsafeMutablePointer<AnyHashable>
+) {
+  result.pointee = AnyHashable(_usingDefaultRepresentationOf: value)
+}
+
+@_inlineable // FIXME(sil-serialize-all)
+@_versioned // FIXME(sil-serialize-all)
+@_silgen_name("_swift_stdlib_makeAnyHashableUpcastingToHashableBaseType")
+internal func _stdlib_makeAnyHashableUpcastingToHashableBaseType<H: Hashable>(
+	_ value: H,
+	storingResultInto result: UnsafeMutablePointer<AnyHashable>
+)
+
+@_inlineable // FIXME(sil-serialize-all)
+@_silgen_name("_swift_convertToAnyHashable")
+public// COMPILER_INTRINSIC
+func _convertToAnyHashable<H: Hashable>(_ value: H) -> AnyHashable {
+  return AnyHashable(value)
+}
+
+
 ```
