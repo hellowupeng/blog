@@ -277,5 +277,13 @@ func _convertToAnyHashable<H: Hashable>(_ value: H) -> AnyHashable {
   return AnyHashable(value)
 }
 
-
+@_inlineable // FIXME(sil-serialize-all)
+@_silgen_name("_swift_anyHashableDownCastConditionalIndirect")
+public // COMPILER_INTRINSIC (actually, called from the runtime)
+func _anyHashableDownCastConditionalIndirect<T>(
+	_ value: UnsafePointer<AnyHashable>,
+	_ target: UnsafeMutablePointer<T>
+) -> Bool {
+  return value.pointee._downCastConditional(into: target)
+}
 ```
