@@ -66,7 +66,16 @@ internal Struct _ArrayBody {
     }
   }
   
-  
+  @_inlineable
+  @_versioned
+  internal var _capacityAndFlags: UInt {
+    get {
+      return _storage._capacityAndFlags
+    }
+    set {
+      _storage._capacityAndFlags = newValue
+    }
+  }
 }
 ```
 
