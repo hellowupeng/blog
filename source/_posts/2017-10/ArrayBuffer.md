@@ -60,7 +60,138 @@ internal struct _ArrayBuffer<Element> : _ArrayBufferProtocol {
   @_inlineable
   @_versioned
   internal var needsElementTypeCheck: Bool {
-    return 
+    // 当 element 类型不是 AnyObject 时，NSArry 需要一个 element 类型检查。
+    return !_isNativeTypeChecked && !(AnyObject.self is Element.Type)
+  }
+  
+  //===--- private ---===//
+  @_inlineable
+  @_versioned
+  internal init(storage: _ArrayBridgeStorage) {
+    _storage = storage
+  }
+  
+  @_versioned
+  internal var _storage: _ArrayBridgeStorage
+}
+
+extension _ArrayBuffer {
+  // 采用 `source` 的 storage
+  @_inlineable
+  @_versioned
+  internal init(_buffer source: NativeBuffer, shiftedToStartIndex: Int) {
+    _sanityCheck(shiftedToStartIndex == 0, "shiftedToStartIndex must be 0")
+    _storage = _ArrayBridgeStorage(native: source._storage)
+  }
+  
+  @_inlineable
+  @_versioned
+  internal mutating func isUniquelyReferenced() -> Bool {
+    if !_isClassOrObjCExistential(Element.self) {
+      return _storage.isUniquelyReferenced_native_noSpareBits()
+    }
+    return _storage.isUniquelyReferencedNative() && _isNative
+  }
+  
+  // 转换到一个 NSArray
+  //
+  // 如果 element 类型被一字不差地桥接 O(1)，否则 O(*n*)
+  @_inlineable
+  @_versioned // FIXME(abi): Used from tests
+  internal func _asCocoaArray() -> _NSArrayCore {
+    return _fastPath(_isNative) ? _native._asCocoaArray() : _nonNative
+  }
+  
+  @_inlineable
+  @_versioned
+  internal mutating func requestUniqueMutableBackingBuffer(minimumCapacity: Int)
+  -> NativeBuffer? {
+    if _fastPath(isUniquelyReferenced()) {
+      let b = _native
+      if _fastPath(b.capacity >= minimumCapacity) {
+        return b
+      }
+    }
+    return nil
+  }
+  
+  @_inlineable
+  @_versioned
+  
+  internal mutating func isMutableAndUniquelyReferenced() -> Bool {
+    return isUniquelyReferenced()
+  }
+  
+  @_inlineable
+  @_versioned
+  internal mutating func isMutableAndUniquelyReferencedOrPinned() -> Bool {
+    return isUniquelyReferencedOrPinned()
+  }
+  
+  @_inlineable
+  @_versioned
+  internal func requestNativeBuffer() -> NativeBuffer? {
+    if !_isClassOrObjCExistential(Element.self) {
+      return _native
+    }
+    return _fastPath(_storage.isNative) ? _native : nil
+  }
+  
+  // 我们有两个版本的类型检查：
+  @_inlineable
+  @_versioned
+  @_inline(never)
+  internal func _typeCheckSlowPath(_ index: Int) {
+    if _fastPath(_isNative) {
+      let element: AnyObject = cast(toBufferOf: AnyObject.self)._native[index]
+      _precondition(
+       element is Element,
+       "Down-casted Array element failed to match the target type")
+    } else {
+      let ns = _nonNative
+      _precondition(
+       ns.objectAt(index) is Element,
+       "NSArray element failed to match the swift Array Element type")
+    }
+    
+    @_inlineable
+    @_versioned
+    internal func _typeCheck(_ subRange: Range<Int>) {
+      if !_isClassOrObjCExistential(Element.self) {
+        return
+      }
+      
+      if _slowPath(needsElementTypeCheck) {
+        // 可以被加快：例如在 non-native 例子里通过使用 enumerateObjectsAtIndexes:options:usingBlock:
+        for i in CountableRange(subRange) {
+          _typeCheckSlowPath(i)
+        }
+      }
+    }
+    
+    @_inlineable
+    @_versioned
+    @discardableResult
+    internal func _copyContents(
+   	  subRange bounds: Range<Int>,
+      initializing target: UnsafeMutablePointer<Element>
+    ) -> UnsafeMutablePointer<Element> {
+      _typeCheck(bounds)
+      if _fastPath(_isNative) {
+        return _native.copyContents(subRange: bounds, initializing: target)
+      }
+      
+      let nonNative = _nonNative
+      
+      let nsSubRange = SwiftShims._SwiftNSRange(
+        location: bounds.loweredBound,
+        length: bounds.upperBound - bounds.lowerBound
+      )
+      
+      let buffer = UnsafeMutableRawPointer(target).assumingMemoryBound(to: AnyObject.self)
+      
+      nonNative.getObjects(buffer, range: nsSubRange)
+    }
   }
 }
 ```

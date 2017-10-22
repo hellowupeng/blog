@@ -82,7 +82,9 @@ public struct AffineTransform : ReferenceConvertible, Hashable, CustomStringConv
   	 从 rotation value (以弧度计量的角度)创建一个仿射变换矩阵。
   	 矩阵采用以下形式：
   
-  	 
+  	 [  cos α sin α  0 ]
+  	 [ -sin α cos α  0 ]
+  	 [    0      0	 1 ]
   	*/
   	public init(rotatingByRadians angle: CGFloat) {
         let sine = sin(angle)
@@ -90,6 +92,58 @@ public struct AffineTransform : ReferenceConvertible, Hashable, CustomStringConv
       
       	self.init(m11: cosine, m12: sine, m21: -sine, m22: cosine, tX: CGFloat(0.0),
                    tY: CGFloat(0.0))
+    }
+  
+  	/**
+  	 从一个旋转值（以度计量的角度）创建一个仿射变换矩阵。
+  	 矩阵采用以下形式。
+  
+  	 [ cos α sin α 0 ]
+  	 [ -sin α cos α 0 ]
+  	 [ 0 	0		1 ]
+  	*/
+  	public init(rotationByDegrees angle: CGFloat) {
+        let α = angle * .pi / 180.0
+      	self.init(rotationByRadians: α)
+    }
+  
+  	/**
+  	 一个标识仿射变换矩阵。
+  
+  	 [ 1 0 0 ]
+  	 [ 0 1 0 ]
+  	 [ 0 0 1 ]
+  	*/
+  	public static let identity = AffineTransform(m11: CGFloat(1.0), m12: CGFloat(0.0),
+ 		m21: CGFloat(0.0), m22: CGFloat(1.0), tX: CGFloat(0.0), tY: CGFloat(0.0))
+  
+  	// 转换
+  	public mutating func translate(x: CGFloat, y: CGFloat) {
+        tX += m11 * x + m21 * y
+      	tY += m12 * x + m22 * y
+    }
+  
+  	/**
+  	 从一个旋转值(以度数计量的角度 α)改变一个仿射变换矩阵。
+  	 矩阵采用以下形式：
+  
+  	 [ cos α	sin α	0 ]
+  	 [ -sin α	cos α	0 ]
+  	 [ 	 0		  0		1 ]
+  	*/
+  	public mutating func rotate(byDegrees angle: CGFloat) {
+        let α = angle * .pi / 180.0
+      	return rotate(byRadians: α)
+    }
+  
+  	public mutating func rotate(byRadians angle: CGFloat) {
+        let sine = sin(angle)
+      	let cosine = cos(angle)
+      
+      	m11 = cosine
+      	m12 = sine
+      	m21 = -sine
+      	m22 = cosine
     }
 }
 ```
