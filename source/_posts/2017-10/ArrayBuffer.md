@@ -190,7 +190,122 @@ extension _ArrayBuffer {
       
       let buffer = UnsafeMutableRawPointer(target).assumingMemoryBound(to: AnyObject.self)
       
+      // Copies the references out of the NSArray whithout retaining them
       nonNative.getObjects(buffer, range: nsSubRange)
+      
+      // Make another pass to retain the copied objects
+      var result = target
+      for _ in CountableRange(bounds) {
+        result.initialize(to: result.pointee)
+        result += 1
+      }
+      return result
+    }
+    
+    // 从这个 buffer 返回包含在 `bounds` 里元素的子区间的一个 `_SliceBuffer`。
+    @_inlineable
+    @_versioned
+    internal subscript(bounds: Range<Int>) -> _SliceBuffer<Element> {
+      get {
+        _typeCheck(bounds)
+        
+        if _fastPath(_isNative) {
+          return _native(bounds)
+        }
+        
+        let boundsCount = bounds.count
+        if boundsCount == 0 {
+          return _SliceBuffer(
+           _buffer: _ContiguousArrayBuffer<Element>(),
+           shiftedToStartIndex: bounds.lowerBound)
+        }
+        
+        let nonNative = self._nonNative
+        let cocoa = _CocoaArrayWrapper(nonNative)
+        let cocoaStorageBaseAddress = cocoa.contiguousStorage(Range(self.indices))
+        
+        if let cocoaStorageBaseAddress = cocoaStorageBaseAddress {
+          let basePtr = UnsafeMutableRawPointer(cocoaStorageBaseAddress)
+           .assumingMemoryBound(to: Element.self)
+          return _SliceBuffer(
+           owner: nonNative,
+           subscriptBaseAddress: basePtr,
+           indices: bounds,
+           hasNativeBuffer: false)
+        }
+        
+        // 没有发现连续的存储，我们必须分配
+        let result = _ContiguousArrayBuffer<Element>(
+         _uninitializedCount: boundsCount, minimumCapacity: 0)
+        
+        cocoa.buffer.getObjects(
+         UnsafeMutableRawPointer(result.firstElementAddress)
+          .assumingMemoryBound(to: AnyObject.self),
+         range: _SwiftNSRange(location: bounds.lowerBound, length: boundsCount))
+        
+        return _SliceBuffer(
+         _buffer: result, shiftedToStartIndex: bounds.lowerBound)
+      }
+      set {
+        fatalError("not implemented")
+      }
+    }
+    
+    // 指向第一个元素的指针
+    //
+    // - 前提：elements 知道将会被连续地存储
+    @_inlineable
+    @_versioned
+    internal var firstElementAddress: UnsafeMutablePointer<Element> {
+      _sanityCheck(_isNative, "must be a native buffer")
+      return _native.firstElementAddress
+    }
+    
+    @_inlineable
+    @_versioned
+    internal var firstElementAddressIfContiguous: UnsafeMutablePointer<Element>? {
+      return _fastPath(_isNative) ? firstElementAddress : nil
+    }
+    
+    @_inlineable
+    @_versioned
+    internal var count: Int {
+      @inline(__always)
+      get {
+        return _fastPath(_isNative) ? _native.count : _nonNative.count
+      }
+      set {
+        _sanityCheck(_isNative, "attempting to update count of Cocoa array")
+        _natvie.count = newValue
+      }
+    }
+    
+    
+    
+    // Traps if an inout violation is detected or if the buffer
+    // is native and the subscript is out of range.
+    //
+    // wasNative == _isNative in the absence of inout violations.
+    // Because the optimizer can hoist the original check it might have been
+    // invalidated by illegal code.
+    @_inlineable
+    @_versioned
+    internal func _checkInoutAndNativeBounds(_ index: Int, wasNative: Bool) {
+      _precondition(
+       _isNative == wasNative,
+       "inout rules were violated: the array was overwritten")
+      
+      if _fastPath(wasNative) {
+        _native._checkValidSubscript(index)
+      }
+    }
+    
+    @_inlineable
+    @_versioned
+    internal func _checkInoutAndNativeTypeCheckedBounds(
+     _ index: Int, wasNativeTypeChecked: Bool) {
+      _precondition(
+      )
     }
   }
 }
