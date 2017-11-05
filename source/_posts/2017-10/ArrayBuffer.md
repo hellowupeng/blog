@@ -305,8 +305,100 @@ extension _ArrayBuffer {
     internal func _checkInoutAndNativeTypeCheckedBounds(
      _ index: Int, wasNativeTypeChecked: Bool) {
       _precondition(
-      )
+        _isNative == wasNative,
+        "inout rules were violated: the array was overWritten")
+      
+      if _fastPath(wasNative) {
+        _native._checkValidSubscript(index)
+      }
     }
+    
+    @_inlineable
+    @_versioned
+    internal func _checkInoutAndNativeTypeCheckedBounds(
+    _ index: Int, wasNativeTypeChecked: Bool)
+  } {
+    _precondition(
+     _isNativeTypeChecked == wasNativeTypeChecked,
+     "inout rules were violated: the array was overwritten")
+    
+    if _fastPath(wasNativeTypeChecked) {
+      _native._checkValidSubscript(index)
+    }
+  }
+  
+  @_inlineable
+  @_versioned
+  internal var capacity: Int {
+    return _fastPath(_isNative) ? _native.capacity : _nonNative.count
+  }
+  
+  @_inlineable
+  @_versioned
+  @inline(__always)
+  internal func getElement(_ i: Int, wasNativeTypeChecked: Bool) -> Element {
+    if _fastPath(wasNativeTypeChecked) {
+      return _nativeTypeChecked[i]
+    }
+    return unsafeBitCast(_getElementSlowPath(i), to: Element.self)
+  }
+  
+  @_inlineable
+  @_versioned
+  @inline(never)
+  internal func _getElementSlowPath(_ i: Int) -> AnyObject {
+    _sanityCheck(
+     _isClassOrObjCExistential(Element.self),
+     "Only single reference elements can be indexed here.")
+    let element: AnyObject
+    if _isNative {
+      _native._CheckValidSubScript(i)
+      
+      element = cast(toBufferOf: AnyObject.self)._native[i]
+      _precondition(
+       element is Element,
+       "Down-casted Array element failed to match the target type")
+    } else {
+      element = _nonNative.objectAt(i)
+      _precondition(
+       element is Element,
+       "NSArray element failed to match the swift Array Element type")
+    }
+    return element
+  }
+  
+  @_inlineable
+  @_versioned
+  internal subscript(i: Int) -> Element {
+    get {
+      return getElement(i, wasNativeTypeChecked: _isNativeTypeChecked)
+    }
+    
+    nonMutating set {
+      if _fastPath(_isNative) {
+        _native[i] = newValue
+      }
+      else {
+        var refCopy = self
+        refCopy.replaceSubrange(
+         i..<(i + 1),
+         with: 1,
+         elementsOf: CollectionOfOne(newValue))
+      }
+    }
+  }
+  
+  @_inlineable
+  @_versioned
+  internal func withUnsafeBufferPointer<R>(
+   - body: (UnsafeBufferPointer<Element>) throws -> R
+  ) rethrows -> R {
+    if _fastPath(_isNative) {
+      defer { _fixLifetime(self) }
+      return try body(
+       UnsafeBufferPointer(start: firstElementAddress, count: count))
+    }
+    return try ContiguousArray(self).withUnsafeBufferPointer(body)
   }
 }
 ```
