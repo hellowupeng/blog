@@ -12,8 +12,10 @@
 ### TCP/IP 模型
 
 ### HTTP
-请求头部（header）
-请求方法（method）
+#### 请求头部（header）
+#### 请求方法（method）
+> CDGH、PPPT  
+1. [HTTP 请求方法之 Connect](https://github.com/hellowupeng/blog/issues/1)
 
 ### HTTPS
 
